@@ -3,8 +3,23 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuliaZucarelli/POO-2026.git"
+  },
+  "author": "Julia Zucareli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuliaZucarelli/POO-2026/issues"
+  },
+  "homepage": "https://github.com/JuliaZucarelli/POO-2026#readme",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "deno": "^2.9.6"
+  }
 }
