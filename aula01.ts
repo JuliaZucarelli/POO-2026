@@ -1,32 +1,30 @@
-class Personagem {
-    nome: string;
-    pontos_vida: number;
-
-    constructor(nome: string, pontos_vida: number) {
-        this.nome = nome;
-        this.pontos_vida = pontos_vida;
-    }
+// Interface que define a estrutura de um personagem
+interface Personagem {
+  nome: string;
+  pontosVida: number;
 }
 
+// Função que diminui os pontos de vida do personagem
 function ataque(alvo: Personagem, dano: number): void {
-    alvo.pontos_vida -= dano;
+  alvo.pontosVida -= dano;
 
-    // Garante que os pontos de vida não fiquem negativos
-    if (alvo.pontos_vida < 0) {
-        alvo.pontos_vida = 0;
-    }
+  // Garante que os pontos de vida não fiquem negativos
+  if (alvo.pontosVida < 0) {
+    alvo.pontosVida = 0;
+  }
 
-    console.log(
-        `${alvo.nome} recebeu ${dano} de dano! PV restante: ${alvo.pontos_vida}`
-    );
+  console.log(
+    `${alvo.nome} recebeu ${dano} de dano! PV restante: ${alvo.pontosVida}`
+  );
 }
 
 // Criação e inicialização do personagem
-const heroi = new Personagem("Aragorn", 100);
+const heroi: Personagem = {
+  nome: "Aragorn",
+  pontosVida: 100,
+};
 
-console.log(
-    `Personagem criado: ${heroi.nome} com ${heroi.pontos_vida} PV.\n`
-);
+console.log(`Personagem criado: ${heroi.nome} com ${heroi.pontosVida} PV.\n`);
 
 // Simulando ataques
 ataque(heroi, 30);
