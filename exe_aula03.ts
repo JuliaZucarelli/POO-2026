@@ -1,3 +1,5 @@
+// Julia Zucareli Silveira
+
 // interface que define a estrutura de um personagem
 interface Personagem {
   nome: string;
