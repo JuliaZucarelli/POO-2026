@@ -128,9 +128,29 @@ class Espada implements Arma {
         this.cooldown = new Cooldown(duracaoCooldown);
     }
 
-    atacar(alvo : Personagem) : void {}
-    podeUsar() : boolean {}
-    novoTurno(): void {}
+    atacar(alvo : Personagem) : void {
+        // verifica se pode atacar 
+        if (!this.podeUsar()) return 
+
+        // aplica o dano - chama o método de 'Personagem' que representa 'receberDano()'
+        alvo.receberDano(this.dano)
+
+        // inicia o cooldown - chama o método de 'Cooldown' que representar 'iniciar()'
+        this.cooldown.iniciar();
+    }
+
+    podeUsar() : boolean {
+        // verifica se cooldown está disponível 
+        if(this.cooldown.estaDisponivel()){
+            return true 
+        } else {
+            return false
+        }
+    }
+
+    novoTurno(): void {
+        this.cooldown.passarTurno();
+    }
 }
 
 // classe Arco que garante que siga a interface Arma
@@ -141,7 +161,7 @@ class Arco implements Arma {
     constructor(
         private dano : number,
         private flechaAtual : number,
-        private flechaMaxima : number, 
+        private flechaMaxima : number = 20, 
         duracaoCooldown : number, 
     ) {
         this.cooldown = new Cooldown(duracaoCooldown);
@@ -152,18 +172,18 @@ class Arco implements Arma {
         if (!this.podeUsar()) return 
 
         // desconta o número de flechas 
-        this.flechaAtual = this.flechaAtual - this.flechaMaxima
+        this.flechaAtual = this.flechaAtual - 1
 
-        // aplica o dano 
-        alvo.receberDano(dano);
+        // aplica o dano - chama o método de 'Personagem' que representa 'receberDano()'
+        alvo.receberDano(this.dano);
 
-        // inicia o cooldown 
+        // inicia o cooldown - chama o método de 'Cooldown' que representar 'iniciar()'
         this.cooldown.iniciar();
     }
 
     podeUsar() : boolean {
         // arco pode ser utilizado se tiver flecha e cooldown disponível
-        if (this.flechaAtual >= this.flechaMaxima && this.cooldown.estaDisponivel()) {
+        if (this.flechaAtual >= 0 && this.cooldown.estaDisponivel()) {
             return true 
         } else {
             return false
@@ -209,7 +229,7 @@ class VarinhaMagica implements Arma {
         // aplicar o dano - chama o método de 'Personagem' que representa 'receberDano()'
         alvo.receberDano(this.dano)
 
-        // iniciar o cooldown - chama o método de "Cooldown" que representar 'iniciar()'
+        // iniciar o cooldown - chama o método de 'Cooldown' que representar 'iniciar()'
         this.cooldown.iniciar()
     }
 
