@@ -42,31 +42,65 @@ class Personagem implements AtualizavelPorTurno {
     }
 
     atacarPersonagem(alvo : Personagem) {
+        // verifica se tem arma
+        if (!this.arma) return 
 
+        // ataca o alvo - aqui não calcula o dano que o personagem vai tomar
+        this.arma.atacar(alvo)
+
+        // ganha XP por atacar 
+        this.ganharXP(10)
     }
 
     receberDano(quantidade : number) {
+        const vidaAntes = this.vida
+        this.vida -= quantidade 
 
+        // impede vida negativa 
+        if (this.vida < 0) {
+            this.vida = 0
+        }
+
+        // dano real 
+        const danoReal = vidaAntes - this.vida
+
+        console.log(`${this.nome} recebeu ${danoReal} de dano.`)
+
+        // verifica se está vivo 
+        if (!this.estaVivo()) {
+            console.log(`${this.nome} foi derrotado.`)
+        }
     }
 
-    estaVivo() : boolean {
-
+    estaVivo() {
+        return this.vida > 0
     }
     
     ganharXP(quantidade : number) {
+        this.xp += quantidade
 
+        console.log (`${this.nome} ganhou ${quantidade} XP.` + `XP atual: ${this.xp}`)
+        
+        if (this.xp >= 100) {
+            this.subirDeNivel()
+        }
     }
 
     subirDeNivel() {
+        this.nivel++
+        this.xp = 0
+        this.vidaMaxima += 20 
+        this.vida = this.vidaMaxima
 
+        console.log (`${this.nome} subiu para o núvel ${this.nivel}`)
     }
 
     equiparArma(arma : Arma) {
-
+        this.arma = arma; 
     }
 
     adicionarItensInventario(item : Item) {
-
+        this.inventario.adicionarItem(item)
     }
 
     novoTurno(): void {
