@@ -1,10 +1,12 @@
 
 // interface AtualizavávelPorTurno - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas 
+// o jogo não precisa saber qual é o tipo específico de cada objeto, ele só precisa saber que o objeto possuir 'novoTurno()'
 interface AtualizavelPorTurno {
     novoTurno() : void;
 }
 
 // classe Jogo 
+// registrar entidades e disparar a passagem de turno 
 class Jogo {
     private personagens : Personagem[] = [];
     private objetos : AtualizavelPorTurno[] = [];
@@ -23,6 +25,7 @@ class Jogo {
 }
 
 // classe Personagem que garante que a classe siga a interface AtualizavelPorTurno 
+// controlar vida, XP, nível, inventário, arma e ações do personagem 
 class Personagem implements AtualizavelPorTurno { 
     private inventario : Inventario; // composição - criado pelo próprio personagem 
     private arma : Arma | null = null; 
@@ -80,6 +83,7 @@ interface Arma {
 }
 
 // classe Espada que garante que siga a interface Arma
+// executar ataque de dano físico com cooldown 
 class Espada implements Arma {
     private cooldown : Cooldown; 
 
@@ -96,6 +100,7 @@ class Espada implements Arma {
 }
 
 // classe Arco que garante que siga a interface Arma
+// executar ataque e contralar sua recarga conforme a regra definida - olhar enunciado 
 class Arco implements Arma {
     private cooldown : Cooldown;
 
@@ -113,6 +118,7 @@ class Arco implements Arma {
 }
 
 // classe VarinhaMagica que garante que siga a interface Arma
+// executar ataque relacionado a mana e cooldown 
 class VarinhaMagica implements Arma {
     private cooldown : Cooldown;
 
@@ -139,6 +145,7 @@ interface Efeito extends AtualizavelPorTurno {
 }
 
 // interface Veneno que herda a interface AtualizavelPorTurno - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas
+// representar um efeito que causa dano durante uma quantidade de turnos 
 class Veneno implements Efeito {
     constructor(
         private danoPorTurno : number, 
@@ -151,6 +158,7 @@ class Veneno implements Efeito {
 }
 
 // classe Regeneracao que garante que siga a interface Efeito 
+// representar um efeito que cura durante uma quantidade de turnos 
 class Regeneracao implements Efeito {
     constructor(
         private curaPorTurno : number, 
@@ -163,24 +171,30 @@ class Regeneracao implements Efeito {
 }
 
 // classe Inventario 
+// armazenar, adicionar, remover e listar itens 
 class Inventario { 
     // todo inventário começa vazio 
     private itens : Item[] = [];
 
     adicionarItem(item : Item) : void {
-
+        this.itens.push(item)
     }
 
     removerItem(item : Item) : void {
-
+        this.itens = this.itens.filter(i => i !== item)
     }
 
-    listarItens() : Item[] {
+    listarItens() {
+        console.log(`Inventário: `)
 
+        for (const item of this.itens) {
+            console.log(`- ${item.nome}`)
+        }
     }
 }
 
 // classe Item 
+// representar um item com um nome e valor 
 class Item {
     constructor(
         public nome : string,
@@ -189,6 +203,7 @@ class Item {
 }
 
 /// classe Cooldown
+// controlar quantos turnos faltam para uma ação ficar disponível 
 class Cooldown {
     private turnosRestantes : number = 0; 
 
@@ -196,15 +211,16 @@ class Cooldown {
         private duracao : number,
     ) {}
 
-    iniciar() : void {
+    // iniciar o cooldown 
+    iniciar() : boolean {
+    }
+
+    // verifica se já está disponível agora para o uso 
+    estaDisponivel() : number { 
 
     }
 
-    estaDisponivel() : boolean { 
-
-    }
-
-    passarTurno() : void { 
+    passarTurno() : number | null { 
 
     }
 }
