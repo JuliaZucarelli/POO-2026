@@ -1,7 +1,10 @@
+
+// interface AtualizavávelPorTurno - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas 
 interface AtualizavelPorTurno {
     novoTurno() : void;
 }
 
+// classe Jogo 
 class Jogo {
     private personagens : Personagem[] = [];
     private objetos : AtualizavelPorTurno[] = [];
@@ -19,6 +22,7 @@ class Jogo {
     }
 }
 
+// classe Personagem que garante que a classe siga a interface AtualizavelPorTurno 
 class Personagem implements AtualizavelPorTurno { 
     private inventario : Inventario; // composição - criado pelo próprio personagem 
     private arma : Arma | null = null; 
@@ -67,6 +71,7 @@ class Personagem implements AtualizavelPorTurno {
     }
 }
 
+// interface Arma - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas 
 interface Arma {
     // métodos que 'Personagem' vai chamar sem saber qual arma está sendo utilizada
   atacar(alvo : Personagem) : void; 
@@ -74,6 +79,7 @@ interface Arma {
   novoTurno() : void; 
 }
 
+// classe Espada que garante que siga a interface Arma
 class Espada implements Arma {
     private cooldown : Cooldown; 
 
@@ -89,6 +95,7 @@ class Espada implements Arma {
     novoTurno(): void {}
 }
 
+// classe Arco que garante que siga a interface Arma
 class Arco implements Arma {
     private cooldown : Cooldown;
 
@@ -105,6 +112,7 @@ class Arco implements Arma {
     novoTurno(): void {}
 }
 
+// classe VarinhaMagica que garante que siga a interface Arma
 class VarinhaMagica implements Arma {
     private cooldown : Cooldown;
 
@@ -124,11 +132,13 @@ class VarinhaMagica implements Arma {
     novoTurno(): void {}
 }
 
+// interface Efeito que herda a interface AtualizavelPorTurno - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas
 interface Efeito extends AtualizavelPorTurno {
     aplicar(alvo : Personagem) : void; 
     estaAtivo() : boolean;
 }
 
+// interface Veneno que herda a interface AtualizavelPorTurno - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas
 class Veneno implements Efeito {
     constructor(
         private danoPorTurno : number, 
@@ -140,6 +150,7 @@ class Veneno implements Efeito {
     novoTurno(): void {}
 }
 
+// classe Regeneracao que garante que siga a interface Efeito 
 class Regeneracao implements Efeito {
     constructor(
         private curaPorTurno : number, 
@@ -151,9 +162,10 @@ class Regeneracao implements Efeito {
     novoTurno(): void {}
 }
 
+// classe Inventario 
 class Inventario { 
+    // todo inventário começa vazio 
     private itens : Item[] = [];
-
 
     adicionarItem(item : Item) : void {
 
@@ -168,6 +180,7 @@ class Inventario {
     }
 }
 
+// classe Item 
 class Item {
     constructor(
         public nome : string,
@@ -175,6 +188,7 @@ class Item {
     ) {}
 }
 
+/// classe Cooldown
 class Cooldown {
     private turnosRestantes : number = 0; 
 
