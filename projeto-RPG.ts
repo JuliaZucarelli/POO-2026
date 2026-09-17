@@ -140,15 +140,48 @@ class Arco implements Arma {
 
     constructor(
         private dano : number,
+        private flechaAtual : number,
+        private flechaMaxima : number, 
         duracaoCooldown : number, 
     ) {
         this.cooldown = new Cooldown(duracaoCooldown);
     }
 
-    atacar(alvo : Personagem) : void {}
-    podeUsar() : boolean {}
-    recarregar(quantidade : number) : void {}
-    novoTurno(): void {}
+    atacar(alvo : Personagem) : void {
+        // verifica se pode usar a arma
+        if (!this.podeUsar()) return 
+
+        // desconta o número de flechas 
+        this.flechaAtual = this.flechaAtual - this.flechaMaxima
+
+        // aplica o dano 
+        alvo.receberDano(dano);
+
+        // inicia o cooldown 
+        this.cooldown.iniciar();
+    }
+
+    podeUsar() : boolean {
+        // arco pode ser utilizado se tiver flecha e cooldown disponível
+        if (this.flechaAtual >= this.flechaMaxima && this.cooldown.estaDisponivel()) {
+            return true 
+        } else {
+            return false
+        }
+    }
+
+    recarregar(quantidade : number) : void {
+        this.flechaAtual += quantidade 
+
+        // verifica se não ultrapassou o número máximo de flechas 
+        if (this.flechaAtual >= this.flechaMaxima) {
+            this.flechaAtual = this.flechaMaxima
+        }
+    }   
+
+    novoTurno(): void {
+        this.cooldown.passarTurno();
+    }
 }
 
 // classe VarinhaMagica que garante que siga a interface Arma
@@ -168,9 +201,7 @@ class VarinhaMagica implements Arma {
 
     atacar(alvo : Personagem) : void {
         // verifica se pode usar a arma 
-        if (!this.podeUsar()) {
-            return 
-        } 
+        if (!this.podeUsar()) return 
 
         // descontar mana
         this.manaAtual = this.manaAtual - this.custoMana
@@ -183,7 +214,7 @@ class VarinhaMagica implements Arma {
     }
 
     podeUsar(): boolean {  
-        // varinha pode ser usada quando tiver mana suficiente 
+        // varinha pode ser usada quando tiver mana suficiente e cooldown estiver disponível 
         if (this.manaAtual >= this.custoMana && this.cooldown.estaDisponivel()) {
             return true 
         } else {
@@ -194,6 +225,7 @@ class VarinhaMagica implements Arma {
     recuperarMana(quantidade : number) : void {
         this.manaAtual += quantidade
 
+        // verifica se não ultrapassou o número máximo de mana
         if (this.manaAtual > this.manaMaxima) {
             this.manaAtual = this.manaMaxima
         }
