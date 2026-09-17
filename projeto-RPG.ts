@@ -166,10 +166,42 @@ class VarinhaMagica implements Arma {
         this.cooldown = new Cooldown(duracaoCooldown);
     }
 
-    atacar(alvo : Personagem) : void {}
-    podeUsar(): boolean {}
-    recuperarMana(quantidade : number) : void {}
-    novoTurno(): void {}
+    atacar(alvo : Personagem) : void {
+        // verifica se pode usar a arma 
+        if (!this.podeUsar()) {
+            return 
+        } 
+
+        // descontar mana
+        this.manaAtual = this.manaAtual - this.custoMana
+
+        // aplicar o dano - chama o método de 'Personagem' que representa 'receberDano()'
+        alvo.receberDano(this.dano)
+
+        // iniciar o cooldown - chama o método de "Cooldown" que representar 'iniciar()'
+        this.cooldown.iniciar()
+    }
+
+    podeUsar(): boolean {  
+        // varinha pode ser usada quando tiver mana suficiente 
+        if (this.manaAtual >= this.custoMana && this.cooldown.estaDisponivel()) {
+            return true 
+        } else {
+            return false 
+        }
+    }
+
+    recuperarMana(quantidade : number) : void {
+        this.manaAtual += quantidade
+
+        if (this.manaAtual > this.manaMaxima) {
+            this.manaAtual = this.manaMaxima
+        }
+    }
+
+    novoTurno(): void {
+        this.cooldown.passarTurno()
+    }
 }
 
 // interface Efeito que herda a interface AtualizavelPorTurno - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas
@@ -247,10 +279,16 @@ class Cooldown {
 
     // iniciar o cooldown 
     iniciar() : boolean {
+        // inicia o cooldown 
+        this.turnosRestantes = this.duracao
+        console.log(`Cooldown iniciado. Bloqueado por ${this.duracao} turnos.`)
     }
 
     // verifica se já está disponível agora para o uso 
     estaDisponivel() : number { 
+        if (this.turnosRestantes != 0) {
+            const restante = this.duracao - this.turnosRestantes
+        }
 
     }
 
