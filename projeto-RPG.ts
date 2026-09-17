@@ -104,7 +104,7 @@ class Personagem implements AtualizavelPorTurno {
     }
 
     novoTurno(): void {
-        
+        this.arma?.novoTurno();
     }
 }
 
