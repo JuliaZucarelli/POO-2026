@@ -72,6 +72,21 @@ class Personagem implements AtualizavelPorTurno {
         }
     }
 
+    curar(quantidade : number) {
+        const vidaAntes = this.vida
+        this.vida += quantidade
+
+        // impede vida negativa 
+        if (this.vida > this.vidaMaxima) {
+            this.vida = this.vidaMaxima
+        }
+
+        // cura real 
+        const curaReal = this.vida - vidaAntes
+
+        console.log(`${this.nome} recebeu ${curaReal} de vida.`)        
+    }
+
     estaVivo() {
         return this.vida > 0
     }
@@ -288,7 +303,7 @@ class Veneno implements Efeito {
     }
 
     novoTurno(): void {
-        // verificar se é maior que zero 
+        // verifica se duração restante é maior que zero 
         if (this.duracaoRestante > 0) {
             this.duracaoRestante -= 1;
     }
@@ -302,9 +317,29 @@ class Regeneracao implements Efeito {
         private duracaoRestante : number,
     ) {}
 
-    aplicar(alvo : Personagem) : void {}
-    estaAtivo(): boolean {}
-    novoTurno(): void {}
+    aplicar(alvo : Personagem) : void {
+        // verifica se está ativo 
+        if (!this.estaAtivo()) return 
+
+        // aplica o dano - chama o método 'Personagem' que representa 'receberDano()'
+        alvo.curar(this.curaPorTurno);
+    }
+
+    estaAtivo(): boolean {
+        // regeneração só pode ser utilizada se a duração estiver acabado 
+        if (this.duracaoRestante == 0) {
+            return false 
+        } else {
+            return true
+        }
+    }
+
+    novoTurno(): void {
+        // verifica se duração restante é maior que zero 
+        if (this.duracaoRestante > 0) {
+            this.duracaoRestante -= 1; 
+        }
+    }
 }
 
 // classe Inventario 
