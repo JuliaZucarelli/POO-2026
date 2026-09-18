@@ -46,15 +46,23 @@ class Personagem implements AtualizavelPorTurno {
         this.inventario = new Inventario(); // composição 
     }
 
+    adicionarItensInventario (item : Item) {
+        this.inventario.adicionarItem(item)
+    }
+
+    listarInventario() {
+        this.inventario.listarItens()
+    }
+
     atacarPersonagem(alvo : Personagem) {
         // verifica se tem arma
         if (!this.arma) return 
 
-        // ataca o alvo - aqui não calcula o dano que o personagem vai tomar
-        this.arma.atacar(alvo)
-
         // ganha XP por atacar 
-        this.ganharXP(10)
+        const atacouComSucesso = this.arma.atacar(alvo)
+        if (atacouComSucesso) {
+            this.ganharXP(10)
+        }
     }
 
     receberDano(quantidade : number) {
@@ -127,10 +135,6 @@ class Personagem implements AtualizavelPorTurno {
         this.arma = arma; 
     }
 
-    adicionarItensInventario(item : Item) {
-        this.inventario.adicionarItem(item)
-    }
-
     novoTurno(): void {
         this.arma?.novoTurno();
 
@@ -142,14 +146,13 @@ class Personagem implements AtualizavelPorTurno {
 
         // remove da lista os efeitos que acabaram 
         this.efeitosAtivos = this.efeitosAtivos.filter(efeito => efeito.estaAtivo());
-
     }
 }
 
 // interface Arma - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas 
 interface Arma {
     // métodos que 'Personagem' vai chamar sem saber qual arma está sendo utilizada
-  atacar(alvo : Personagem) : void; 
+  atacar(alvo : Personagem) : boolean; 
   podeUsar() : boolean; 
   novoTurno() : void; 
 }
@@ -166,15 +169,16 @@ class Espada implements Arma {
         this.cooldown = new Cooldown(duracaoCooldown);
     }
 
-    atacar(alvo : Personagem) : void {
-        // verifica se pode atacar 
-        if (!this.podeUsar()) return 
+    atacar(alvo : Personagem) : boolean {
+        // verifica se pode atacar
+        if (!this.podeUsar()) return false
 
         // aplica o dano - chama o método de 'Personagem' que representa 'receberDano()'
         alvo.receberDano(this.dano)
 
         // inicia o cooldown - chama o método de 'Cooldown' que representar 'iniciar()'
         this.cooldown.iniciar();
+        return true
     }
 
     podeUsar() : boolean {
@@ -205,9 +209,9 @@ class Arco implements Arma {
         this.cooldown = new Cooldown(duracaoCooldown);
     }
 
-    atacar(alvo : Personagem) : void {
+    atacar(alvo : Personagem) : boolean {
         // verifica se pode usar a arma
-        if (!this.podeUsar()) return 
+        if (!this.podeUsar()) return false
 
         // desconta o número de flechas 
         this.flechaAtual = this.flechaAtual - 1
@@ -216,7 +220,8 @@ class Arco implements Arma {
         alvo.receberDano(this.dano);
 
         // inicia o cooldown - chama o método de 'Cooldown' que representar 'iniciar()'
-        this.cooldown.iniciar();
+        this.cooldown.iniciar()
+        return true;
     }
 
     podeUsar() : boolean {
@@ -257,9 +262,9 @@ class VarinhaMagica implements Arma {
         this.cooldown = new Cooldown(duracaoCooldown);
     }
 
-    atacar(alvo : Personagem) : void {
+    atacar(alvo : Personagem) : boolean {
         // verifica se pode usar a arma 
-        if (!this.podeUsar()) return 
+        if (!this.podeUsar()) return false
 
         // descontar mana
         this.manaAtual = this.manaAtual - this.custoMana
@@ -269,6 +274,7 @@ class VarinhaMagica implements Arma {
 
         // iniciar o cooldown - chama o método de 'Cooldown' que representar 'iniciar()'
         this.cooldown.iniciar()
+        return true; 
     }
 
     podeUsar(): boolean {  
@@ -425,3 +431,117 @@ class Cooldown {
         }
     }
 }
+
+// cenário de execução
+
+// 1. criação de um Jogo
+const jogo = new Jogo();
+
+// 2. criação de personagens
+const gandalf = new Personagem("Gandalf", 100, 0, 100, 1);
+const aragorn = new Personagem("Aragorn", 120, 0, 120, 1);
+const saruman = new Personagem("Saruman", 150, 0, 150, 1);
+
+// 3. criação de diferentes armas
+const espada = new Espada(20, 2);
+const arco = new Arco(15, 2, 2, 1);
+const varinha = new VarinhaMagica(30, 60, 60, 20, 2);
+
+// 4. equipamento das armas pelos personagens
+aragorn.equiparArma(espada);
+gandalf.equiparArma(varinha);
+saruman.equiparArma(arco);
+
+// 5. adição dos personagens ao jogo
+jogo.adicionarPersonagem(gandalf);
+jogo.adicionarPersonagem(aragorn);
+jogo.adicionarPersonagem(saruman);
+
+// 6. ataques entre personagens
+console.log("\nATAQUES");
+console.log("Aragorn ataca Saruman");
+aragorn.atacarPersonagem(saruman);
+
+// 7. funcionamento do cooldown 
+console.log("\nAragorn tenta atacar novamente");
+aragorn.atacarPersonagem(saruman);
+console.log("Passando 1 turno");
+jogo.passarTurno();
+console.log("Aragorn tenta atacar novamente");
+aragorn.atacarPersonagem(saruman);
+
+// 8. consumo e recarga de flechas
+console.log("\nARCO E FLECHAS");
+console.log("Saruman ataca Gandalf com o arco");
+saruman.atacarPersonagem(gandalf);
+console.log("Passando 1 turno");
+jogo.passarTurno();
+console.log("Saruman ataca Gandalf novamente");
+saruman.atacarPersonagem(gandalf);
+console.log("Tentativa de ataque sem flechas");
+saruman.atacarPersonagem(gandalf);
+console.log("Recarregando o arco");
+arco.recarregar(2);
+console.log("Saruman ataca após recarregar");
+saruman.atacarPersonagem(gandalf);
+
+// 9. consumo e recuperação de mana
+console.log("\nMANA");
+console.log("Gandalf usa a varinha");
+gandalf.atacarPersonagem(saruman);
+console.log("Gandalf tenta usar a varinha novamente");
+gandalf.atacarPersonagem(saruman);
+console.log("Recuperando 20 de mana");
+varinha.recuperarMana(20);
+console.log("Passando 2 turnos");
+jogo.passarTurno();
+jogo.passarTurno();
+console.log("Gandalf usa a varinha novamente");
+gandalf.atacarPersonagem(saruman);
+
+// 10. criação e utilização do intentário 
+console.log("\nINVENTÁRIO");
+console.log("Adicionando itens ao inventário de Aragorn");
+aragorn.adicionarItensInventario(new Item("Poção de Vida", 50));
+aragorn.adicionarItensInventario(new Item("Escudo", 100));
+aragorn.adicionarItensInventario(new Item("Espada Antiga", 150));
+console.log("Inventário de Aragorn");
+aragorn.listarInventario();
+
+// 11. aplicação e efeitos temporários
+console.log("\nEFEITOS TEMPORÁRIOS");
+console.log("Saruman recebe veneno");
+saruman.aplicarEfeito(new Veneno(10, 3));
+console.log("Aragorn recebe regeneração");
+aragorn.aplicarEfeito(new Regeneracao(10, 2));
+
+// 12. passagem de vários turnos
+console.log("\nPASSAGEM DE TURNOS");
+console.log("TURNO 1");
+jogo.passarTurno();
+console.log("TURNO 2");
+jogo.passarTurno();
+console.log("TURNO 3");
+jogo.passarTurno();
+
+// 13. atualização automática dos objetos
+console.log("\nATUALIZAÇÃO AUTOMÁTICA");
+console.log("Os personagens registrados no jogo atualizam automaticamente suas armas e efeitos a cada passagem de turno.");
+console.log("Passando mais um turno");
+jogo.passarTurno();
+
+// 14. personagem recebendo dano e sendo curado
+console.log("\nDANO E CURA");
+console.log("Aragorn recebe 40 de dano");
+aragorn.receberDano(40);
+console.log("Aragorn recebe 25 de cura");
+aragorn.curar(25);
+
+// 15. ganho de experiência e subida de nível 
+console.log("\nEXPERIÊNCIA E NÍVEL");
+console.log("Aragorn ganha 50 XP");
+aragorn.ganharXP(50);
+console.log("Aragorn ganha mais 60 XP");
+aragorn.ganharXP(60);
+
+
