@@ -262,7 +262,7 @@ interface Efeito extends AtualizavelPorTurno {
     estaAtivo() : boolean;
 }
 
-// interface Veneno que herda a interface AtualizavelPorTurno - qualquer objeto que seja desse tipo precisa possuir as essas caracterísitas
+// classe Veneno garante que siga a interface Efeito 
 // representar um efeito que causa dano durante uma quantidade de turnos 
 class Veneno implements Efeito {
     constructor(
@@ -270,9 +270,28 @@ class Veneno implements Efeito {
         private duracaoRestante : number,
     ) {}
 
-    aplicar(alvo : Personagem) : void {}
-    estaAtivo(): boolean {}
-    novoTurno(): void {}
+    aplicar(alvo : Personagem) : void {
+        // verifica se está ativo 
+        if (!this.estaAtivo()) return 
+
+        // aplica o dano - chama o método de 'Personagem' que representa 'receberDano()'
+        alvo.receberDano(this.danoPorTurno);
+    }
+
+    estaAtivo(): boolean {
+        // veneno pode ser utilizado se a duração estiver acabado 
+        if (this.duracaoRestante == 0) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    novoTurno(): void {
+        // verificar se é maior que zero 
+        if (this.duracaoRestante > 0) {
+            this.duracaoRestante -= 1;
+    }
 }
 
 // classe Regeneracao que garante que siga a interface Efeito 
