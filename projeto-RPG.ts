@@ -31,7 +31,8 @@ class Jogo {
 // classe Personagem que garante que a classe siga a interface AtualizavelPorTurno 
 // controlar vida, XP, nível, inventário, arma e ações do personagem 
 class Personagem implements AtualizavelPorTurno { 
-    private inventario : Inventario; // composição - criado pelo próprio personagem 
+    private inventario : Inventario; // composição 
+    private efeitosAtivos : Efeito[] = []; // composição 
     private arma : Arma | null = null; 
 
     constructor (
@@ -94,6 +95,14 @@ class Personagem implements AtualizavelPorTurno {
     estaVivo() {
         return this.vida > 0
     }
+
+    aplicarEfeito(efeito : Efeito) {
+        // guardar o efeito na lista
+         this.efeitosAtivos.push(efeito); 
+
+        // aplicar efeito
+        efeito.aplicar(this);
+    }
     
     ganharXP(quantidade : number) {
         this.xp += quantidade
@@ -124,6 +133,16 @@ class Personagem implements AtualizavelPorTurno {
 
     novoTurno(): void {
         this.arma?.novoTurno();
+
+        // aplicar efeitos
+        for (const efeito of this.efeitosAtivos) {
+            efeito.aplicar(this);
+            efeito.novoTurno();
+        }
+
+        // remove da lista os efeitos que acabaram 
+        this.efeitosAtivos = this.efeitosAtivos.filter(efeito => efeito.estaAtivo());
+
     }
 }
 
@@ -180,7 +199,7 @@ class Arco implements Arma {
     constructor(
         private dano : number,
         private flechaAtual : number,
-        private flechaMaxima : number = 20, 
+        private flechaMaxima : number,
         duracaoCooldown : number, 
     ) {
         this.cooldown = new Cooldown(duracaoCooldown);
@@ -202,7 +221,7 @@ class Arco implements Arma {
 
     podeUsar() : boolean {
         // arco pode ser utilizado se tiver flecha e cooldown disponível
-        if (this.flechaAtual >= 0 && this.cooldown.estaDisponivel()) {
+        if (this.flechaAtual >= 1 && this.cooldown.estaDisponivel()) {
             return true 
         } else {
             return false
