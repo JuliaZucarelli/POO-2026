@@ -330,21 +330,20 @@ class Cooldown {
     ) {}
 
     // iniciar o cooldown 
-    iniciar() : boolean {
+    iniciar() : void {
         // inicia o cooldown 
         this.turnosRestantes = this.duracao
         console.log(`Cooldown iniciado. Bloqueado por ${this.duracao} turnos.`)
     }
 
     // verifica se já está disponível agora para o uso 
-    estaDisponivel() : number { 
-        if (this.turnosRestantes != 0) {
-            const restante = this.duracao - this.turnosRestantes
-        }
-
+    estaDisponivel() : boolean { 
+        return this.turnosRestantes === 0;
     }
 
-    passarTurno() : number | null { 
-
+    passarTurno() : void { 
+        if (this.turnosRestantes > 0) {
+            this.turnosRestantes -= 1; 
+        }
     }
 }
