@@ -12,15 +12,19 @@ class Jogo {
     private objetos : AtualizavelPorTurno[] = [];
 
     adicionarPersonagem(personagem: Personagem) {
-
+        this.personagens.push(personagem)
+        this.registrarAtualizavel(personagem)
     }
 
     registrarAtualizavel(objeto : AtualizavelPorTurno) {
-
+        this.objetos.push(objeto)
     }
 
     passarTurno() : void {
-
+        // polimorfismo - ele não precisa saber se é um Personagem, Veneno ou Regeneracao
+        for (const objeto of this.objetos) {
+            objeto.novoTurno();
+        }
     }
 }
 
@@ -306,6 +310,7 @@ class Veneno implements Efeito {
         // verifica se duração restante é maior que zero 
         if (this.duracaoRestante > 0) {
             this.duracaoRestante -= 1;
+        }
     }
 }
 
