@@ -658,16 +658,16 @@ interface JogoData {
 // interface salvamento 
 interface JogoRepository {
     // salva e retorna o id criado
-    salvar(jogo : Jogo) : number 
+    salvar(jogo : Jogo) : number;
 
     // retorna as partidas
-    listar() : Jogo[]
+    listar() : Jogo[];
 
     // carrega uma partida específica
-    carregar(id : number) : Jogo 
+    carregar(id : number) : Jogo;
 
     // continua verificando se existe arquivo
-    existe() : boolean 
+    existe() : boolean;
 }
 
 // classe json 
@@ -683,11 +683,13 @@ class JsonJogoReposiory implements JogoRepository {
     salvar(jogo : Jogo) : number {
         let jogos : JogoData[] = []
 
+        // se já existe um arquivo, carrega as partidas existentes
         if(this.existe()) {
-            const json = readFileSync(this.arquivo, "utg-8")
+            const json = readFileSync(this.arquivo, "utf-8")
             jogos = JSON.parse(json)
         }
 
+        // transforma o jogo atual em dados que podem ser salvos
         const dados : JogoData = {
             personagens : jogo.listarPersonagens()
                 .map(personagem => ( {
@@ -696,16 +698,21 @@ class JsonJogoReposiory implements JogoRepository {
                     vidaMaxina : personagem.getVidaMaxima(),
                     dano : personagem.getDano(),
                     xp : personagem.getXP(),
+                    nivel : personagem.getNivel(),
+                    mana : personagem.getMana(),
+                    manaMaxima : personagem.getManaMaxima()
                 }))
         }
 
+        // adiciona o novo jogo ao array
         jogos.push(dados)
 
+        // o índice do array será o id 
         const id = jogos.length - 1
-
         const json = JSON.stringify(jogos, null, 2)
 
-        writeFileSync(this.arquivo, json, "utg-8")
+        // salva de novo o array inteiro do mesmo arquivo 
+        writeFileSync(this.arquivo, json, "utf-8")
 
         return id
     }
@@ -713,7 +720,7 @@ class JsonJogoReposiory implements JogoRepository {
     listar() : Jogo[] {
         if(!this.existe()) return []
 
-        const json = readFileSync(this.arquivo, "utg-8")
+        const json = readFileSync(this.arquivo, "utf-8")
 
         const jogos : JogoData[] = JSON.parse(json)
 
@@ -734,8 +741,16 @@ class JsonJogoReposiory implements JogoRepository {
         const jogo = new Jogo()
 
         for(const personagemData of dados.personagens) {
-            const personagem = new Personagem(personagemData.nome, personagemData.vidaMaxima, personagemData.dano)
-            personagem.restaurarEstado(personagemData.vida, personagemData.XP)
+            const personagem = new Personagem(
+                personagemData.nome, 
+                personagemData.vida, 
+                personagemData.xp, 
+                personagemData.vidaMaxima, 
+                personagemData.nivel, 
+                personagemData.mana, 
+                personagemData.manaMaxima
+            )
+            
             jogo.adicionarPersonagem(personagem)
         }
 
