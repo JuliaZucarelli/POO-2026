@@ -206,6 +206,31 @@ class Personagem implements AtualizavelPorTurno {
     usarHabilidade(habilidade: Habilidade, alvos: Personagem[]): void {
         habilidade.usar(this, alvos);
     }
+
+    // getters - necessário porque esses elemetos são private  
+    getVida() : number {
+        return this.vida
+    }
+
+    getXP() : number {
+        return this.xp
+    }
+
+    getNivel() : number {
+        return this.nivel
+    }
+
+    getVidaMaxima() : number {
+        return this.vidaMaxima
+    }
+
+    getMana() : number {
+        return this.mana
+    }
+
+    getManaMaxima() : number {
+        return this.manaMaxima
+    }
 }
 
 // interface Arma 
@@ -750,7 +775,7 @@ class JsonJogoReposiory implements JogoRepository {
                 personagemData.mana, 
                 personagemData.manaMaxima
             )
-            
+
             jogo.adicionarPersonagem(personagem)
         }
 
