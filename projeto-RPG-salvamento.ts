@@ -932,3 +932,34 @@ jogo.passarTurno();
 jogo.passarTurno();
 console.log("\nGandalf usa Bola de Fogo novamente após o cooldown recarregar");
 gandalf.usarHabilidade(bolaDeFogo, [saruman]);
+
+// 17. teste de salvamento 
+const repository = new JsonJogoReposiory("jogo.json")
+
+const jogo1 = new Jogo()
+const gandalf1 = new Personagem("Gandalf", 100, 0, 100, 1, 100, 100)
+jogo1.adicionarPersonagem(gandalf1)
+const id1 = repository.salvar(jogo1)
+console.log(`Primeiro jogo salvo com o ID ${id1}`)
+
+const jogo2 = new Jogo()
+const aragorn2 = new Personagem("Aragorn", 120, 50, 120, 1, 30, 30)
+jogo1.adicionarPersonagem(aragorn2)
+const id2 = repository.salvar(jogo2)
+console.log(`Primeiro jogo salvo com o ID ${id2}`)
+
+console.log(`\nPARTIDAS SALVAS: `)
+const jogos = repository.listar()
+for (let i = 0; i < jogos.length, i++) {
+    console.log(`\nID: ${i}`)
+
+    for (const personagem of jogos[i].listarPersonagens()) {
+        console.log(`${personagem.nome} | ` + `Vida: ${personagem.getVida()} | ` + `XP: ${personagem.getXP()}`)
+    }
+}
+
+console.log(`\nCARREGANDO ID 0: `)
+const jogoCarregado = repository.carregar(0)
+for (const personagem of jogoCarregado.listarPersonagens()) {
+    console.log(`${personagem.nome} | ` + `Vida: ${personagem.getVida()} | ` + `XP: ${personagem.getXP()}`)
+}
