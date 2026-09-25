@@ -758,7 +758,7 @@ class JsonJogoReposiory implements JogoRepository {
     carregar(id : number) : Jogo {
         const jogos = this.listar()
 
-        if(id < 0 || id >- jogos.length) {
+        if(id < 0 || id >= jogos.length) {
             throw new Error("ID de partida inválido.")
         }
         
@@ -943,13 +943,13 @@ console.log(`Primeiro jogo salvo com o ID ${id1}`)
 
 const jogo2 = new Jogo()
 const aragorn2 = new Personagem("Aragorn", 120, 50, 120, 1, 30, 30)
-jogo1.adicionarPersonagem(aragorn2)
+jogo2.adicionarPersonagem(aragorn2)
 const id2 = repository.salvar(jogo2)
-console.log(`Primeiro jogo salvo com o ID ${id2}`)
+console.log(`Segundo jogo salvo com o ID ${id2}`)
 
 console.log(`\nPARTIDAS SALVAS: `)
 const jogos = repository.listar()
-for (let i = 0; i < jogos.length, i++) {
+for (let i = 0; i < jogos.length; i++) {
     console.log(`\nID: ${i}`)
 
     for (const personagem of jogos[i].listarPersonagens()) {

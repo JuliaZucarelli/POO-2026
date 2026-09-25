@@ -1,0 +1,28 @@
+[
+  {
+    "personagens": [
+      {
+        "nome": "Gandalf",
+        "vida": 100,
+        "vidaMaxima": 100,
+        "xp": 0,
+        "nivel": 1,
+        "mana": 100,
+        "manaMaxima": 100
+      }
+    ]
+  },
+  {
+    "personagens": [
+      {
+        "nome": "Aragorn",
+        "vida": 120,
+        "vidaMaxima": 120,
+        "xp": 50,
+        "nivel": 1,
+        "mana": 30,
+        "manaMaxima": 30
+      }
+    ]
+  }
+]
