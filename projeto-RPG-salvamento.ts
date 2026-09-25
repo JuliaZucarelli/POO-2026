@@ -1,3 +1,19 @@
+// para rodar, usar deno --allow-read --allow-write jogo.ts
+import {
+  existsSync,
+  readFileSync,
+  writeFileSync
+} from "node:fs";
+
+import {
+  createInterface
+} from "node:readline/promises";
+
+import {
+  stdin as input,
+  stdout as output
+} from "node:process";
+
 // interface AtualizavelPorTurno - qualquer objeto que seja desse tipo precisa possuir essas características 
 // o jogo não precisa saber qual é o tipo específico de cada objeto, ele só precisa saber que o objeto possui 'novoTurno()'
 interface AtualizavelPorTurno {
@@ -621,6 +637,94 @@ class DrenagemDeVida implements Habilidade {
     }
 }
 
+
+// interface salvamento 
+interface JogoRepository {
+    // salva e retorna o id criado
+    salvar(jogo : Jogo) : number 
+
+    // retorna as partidas
+    listar() : Jogo[]
+
+    // carrega uma partida específica
+    carregar(id : number) : Jogo 
+
+    // continua verificando se existe arquivo
+    existe() : boolean 
+}
+
+// classe json 
+class JsonJogoReposiory implements JogoRepository {
+    constructor (
+        private readonly arquivo : string
+    ) {}
+
+    existe() : boolean {
+        return existsSync(this.arquivo)
+    }
+
+    salvar(jogo : Jogo) : number {
+        let jogos : JogoData[] = []
+
+        if(this.existe()) {
+            const json = readFileSync(this.arquivo, "utg-8")
+            jogos = JSON.parse(json)
+        }
+
+        const dados : JogoData = {
+            personagens : jogo.listarPersonagens()
+                .map(personagem => ( {
+                    nome : personagem.nome, 
+                    vida : personagem.getVida(),
+                    vidaMaxina : personagem.getVidaMaxima(),
+                    dano : personagem.getDano(),
+                    xp : personagem.getXP(),
+                }))
+        }
+
+        jogos.push(dados)
+
+        const id = jogos.length - 1
+
+        const json = JSON.stringify(jogos, null, 2)
+
+        writeFileSync(this.arquivo, json, "utg-8")
+
+        return id
+    }
+
+    listar() : Jogo[] {
+        if(!this.existe()) return []
+
+        const json = readFileSync(this.arquivo, "utg-8")
+
+        const jogos : JogoData[] = JSON.parse(json)
+
+        return jogos.map(dados => this.criarJogo(dados))
+    }
+
+    carregar(id : number) : Jogo {
+        const jogos = this.listar()
+
+        if(id < 0 || id >- jogos.length) {
+            throw new Error("ID de partida inválido.")
+        }
+        
+        return jogos[id]
+    }
+
+    private criarJogo(dados : JogoData) : Jogo {
+        const jogo = new Jogo()
+
+        for(const personagemData of dados.personagens) {
+            const personagem = new Personagem(personagemData.nome, personagemData.vidaMaxima, personagemData.dano)
+            personagem.restaurarEstado(personagemData.vida, personagemData.XP)
+            jogo.adicionarPersonagem(personagem)
+        }
+
+        return jogo
+    }
+}
 
 
 // 1. criação de um Jogo
