@@ -649,6 +649,11 @@ interface PersonagemData {
     manaMaxima : number;
 }
 
+// interfade de dados do jogo
+interface JogoData {
+    personagens : PersonagemData[];
+}
+
 
 // interface salvamento 
 interface JogoRepository {
