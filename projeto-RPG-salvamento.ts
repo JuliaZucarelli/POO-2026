@@ -41,6 +41,10 @@ class Jogo {
             objeto.novoTurno();
         }
     }
+
+    listarPersonagens() : readonly Personagem[] {
+        return[...this.personagens]
+    }
 }
 
 // classe Personagem que garante que a classe siga a interface AtualizavelPorTurno 
