@@ -637,6 +637,18 @@ class DrenagemDeVida implements Habilidade {
     }
 }
 
+// interface dados do personagem 
+interface PersonagemData {
+    nome : string;
+    vida : number; 
+    vidaMaxima : number; 
+    dano : number;
+    xp : number;
+    nivel : number; 
+    mana : number;
+    manaMaxima : number;
+}
+
 
 // interface salvamento 
 interface JogoRepository {
