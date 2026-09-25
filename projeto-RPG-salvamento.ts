@@ -671,7 +671,7 @@ interface PersonagemData {
     nome : string;
     vida : number; 
     vidaMaxima : number; 
-    dano : number;
+    // dano : number;
     xp : number;
     nivel : number; 
     mana : number;
@@ -721,17 +721,16 @@ class JsonJogoReposiory implements JogoRepository {
         // transforma o jogo atual em dados que podem ser salvos
         const dados : JogoData = {
             personagens : jogo.listarPersonagens()
-                .map(personagem => ( {
+                .map(personagem => ({
                     nome : personagem.nome, 
                     vida : personagem.getVida(),
-                    vidaMaxina : personagem.getVidaMaxima(),
-                    dano : personagem.getDano(),
+                    vidaMaxima : personagem.getVidaMaxima(),
                     xp : personagem.getXP(),
                     nivel : personagem.getNivel(),
                     mana : personagem.getMana(),
                     manaMaxima : personagem.getManaMaxima()
-                }))
-        }
+        }))
+}
 
         // adiciona o novo jogo ao array
         jogos.push(dados)
@@ -788,150 +787,150 @@ class JsonJogoReposiory implements JogoRepository {
 }
 
 
-// 1. criação de um Jogo
-const jogo = new Jogo();
+// // 1. criação de um Jogo
+// const jogo = new Jogo();
 
-// 2. criação de personagens (com mana inicial e mana máxima)
-const gandalf = new Personagem("Gandalf", 100, 0, 100, 1, 100, 100);
-const aragorn = new Personagem("Aragorn", 120, 0, 120, 1, 30, 30);
-const saruman = new Personagem("Saruman", 150, 0, 150, 1, 100, 100);
+// // 2. criação de personagens (com mana inicial e mana máxima)
+// const gandalf = new Personagem("Gandalf", 100, 0, 100, 1, 100, 100);
+// const aragorn = new Personagem("Aragorn", 120, 0, 120, 1, 30, 30);
+// const saruman = new Personagem("Saruman", 150, 0, 150, 1, 100, 100);
 
-// 3. criação de diferentes armas
-const espada = new Espada(20, 2);
-const arco = new Arco(15, 2, 2, 1);
-const varinha = new VarinhaMagica(30, 60, 60, 20, 2);
+// // 3. criação de diferentes armas
+// const espada = new Espada(20, 2);
+// const arco = new Arco(15, 2, 2, 1);
+// const varinha = new VarinhaMagica(30, 60, 60, 20, 2);
 
-// 4. equipamento das armas pelos personagens
-aragorn.equiparArma(espada);
-gandalf.equiparArma(varinha);
-saruman.equiparArma(arco);
+// // 4. equipamento das armas pelos personagens
+// aragorn.equiparArma(espada);
+// gandalf.equiparArma(varinha);
+// saruman.equiparArma(arco);
 
-// 5. adição dos personagens ao jogo
-jogo.adicionarPersonagem(gandalf);
-jogo.adicionarPersonagem(aragorn);
-jogo.adicionarPersonagem(saruman);
+// // 5. adição dos personagens ao jogo
+// jogo.adicionarPersonagem(gandalf);
+// jogo.adicionarPersonagem(aragorn);
+// jogo.adicionarPersonagem(saruman);
 
-// 6. ataques entre personagens
-console.log("\nATAQUES");
-console.log("Aragorn ataca Saruman");
-aragorn.atacarPersonagem(saruman);
+// // 6. ataques entre personagens
+// console.log("\nATAQUES");
+// console.log("Aragorn ataca Saruman");
+// aragorn.atacarPersonagem(saruman);
 
-// 7. funcionamento do cooldown 
-console.log("\nAragorn tenta atacar novamente");
-aragorn.atacarPersonagem(saruman);
-console.log("Passando 1 turno");
-jogo.passarTurno();
-console.log("Aragorn tenta atacar novamente");
-aragorn.atacarPersonagem(saruman);
+// // 7. funcionamento do cooldown 
+// console.log("\nAragorn tenta atacar novamente");
+// aragorn.atacarPersonagem(saruman);
+// console.log("Passando 1 turno");
+// jogo.passarTurno();
+// console.log("Aragorn tenta atacar novamente");
+// aragorn.atacarPersonagem(saruman);
 
-// 8. consumo e recarga de flechas
-console.log("\nARCO E FLECHAS");
-console.log("Saruman ataca Gandalf com o arco");
-saruman.atacarPersonagem(gandalf);
-console.log("Passando 1 turno");
-jogo.passarTurno();
-console.log("Saruman ataca Gandalf novamente");
-saruman.atacarPersonagem(gandalf);
-console.log("Tentativa de ataque sem flechas");
-saruman.atacarPersonagem(gandalf);
-console.log("Recarregando o arco");
-arco.recarregar(2);
-console.log("Saruman ataca após recarregar");
-saruman.atacarPersonagem(gandalf);
+// // 8. consumo e recarga de flechas
+// console.log("\nARCO E FLECHAS");
+// console.log("Saruman ataca Gandalf com o arco");
+// saruman.atacarPersonagem(gandalf);
+// console.log("Passando 1 turno");
+// jogo.passarTurno();
+// console.log("Saruman ataca Gandalf novamente");
+// saruman.atacarPersonagem(gandalf);
+// console.log("Tentativa de ataque sem flechas");
+// saruman.atacarPersonagem(gandalf);
+// console.log("Recarregando o arco");
+// arco.recarregar(2);
+// console.log("Saruman ataca após recarregar");
+// saruman.atacarPersonagem(gandalf);
 
-// 9. consumo e recuperação de mana
-console.log("\nMANA");
-console.log("Gandalf usa a varinha");
-gandalf.atacarPersonagem(saruman);
-console.log("Gandalf tenta usar a varinha novamente");
-gandalf.atacarPersonagem(saruman);
-console.log("Recuperando 20 de mana");
-varinha.recuperarMana(20);
-console.log("Passando 2 turnos");
-jogo.passarTurno();
-jogo.passarTurno();
-console.log("Gandalf usa a varinha novamente");
-gandalf.atacarPersonagem(saruman);
+// // 9. consumo e recuperação de mana
+// console.log("\nMANA");
+// console.log("Gandalf usa a varinha");
+// gandalf.atacarPersonagem(saruman);
+// console.log("Gandalf tenta usar a varinha novamente");
+// gandalf.atacarPersonagem(saruman);
+// console.log("Recuperando 20 de mana");
+// varinha.recuperarMana(20);
+// console.log("Passando 2 turnos");
+// jogo.passarTurno();
+// jogo.passarTurno();
+// console.log("Gandalf usa a varinha novamente");
+// gandalf.atacarPersonagem(saruman);
 
-// 10. criação e utilização do inventário 
-console.log("\nINVENTÁRIO");
-console.log("Adicionando itens ao inventário de Aragorn");
-aragorn.adicionarItensInventario(new Item("Poção de Vida", 50));
-aragorn.adicionarItensInventario(new Item("Escudo", 100));
-aragorn.adicionarItensInventario(new Item("Espada Antiga", 150));
-console.log("Inventário de Aragorn");
-aragorn.listarInventario();
+// // 10. criação e utilização do inventário 
+// console.log("\nINVENTÁRIO");
+// console.log("Adicionando itens ao inventário de Aragorn");
+// aragorn.adicionarItensInventario(new Item("Poção de Vida", 50));
+// aragorn.adicionarItensInventario(new Item("Escudo", 100));
+// aragorn.adicionarItensInventario(new Item("Espada Antiga", 150));
+// console.log("Inventário de Aragorn");
+// aragorn.listarInventario();
 
-// 11. aplicação de efeitos temporários
-console.log("\nEFEITOS TEMPORÁRIOS");
-console.log("Saruman recebe veneno");
-saruman.aplicarEfeito(new Veneno(10, 3));
-console.log("Aragorn recebe regeneração");
-aragorn.aplicarEfeito(new Regeneracao(10, 2));
+// // 11. aplicação de efeitos temporários
+// console.log("\nEFEITOS TEMPORÁRIOS");
+// console.log("Saruman recebe veneno");
+// saruman.aplicarEfeito(new Veneno(10, 3));
+// console.log("Aragorn recebe regeneração");
+// aragorn.aplicarEfeito(new Regeneracao(10, 2));
 
-// 12. passagem de vários turnos
-console.log("\nPASSAGEM DE TURNOS");
-console.log("TURNO 1");
-jogo.passarTurno();
-console.log("TURNO 2");
-jogo.passarTurno();
-console.log("TURNO 3");
-jogo.passarTurno();
+// // 12. passagem de vários turnos
+// console.log("\nPASSAGEM DE TURNOS");
+// console.log("TURNO 1");
+// jogo.passarTurno();
+// console.log("TURNO 2");
+// jogo.passarTurno();
+// console.log("TURNO 3");
+// jogo.passarTurno();
 
-// 13. atualização automática dos objetos
-console.log("\nATUALIZAÇÃO AUTOMÁTICA");
-console.log("Os personagens registrados no jogo atualizam automaticamente suas armas e efeitos a cada passagem de turno.");
-console.log("Passando mais um turno");
-jogo.passarTurno();
+// // 13. atualização automática dos objetos
+// console.log("\nATUALIZAÇÃO AUTOMÁTICA");
+// console.log("Os personagens registrados no jogo atualizam automaticamente suas armas e efeitos a cada passagem de turno.");
+// console.log("Passando mais um turno");
+// jogo.passarTurno();
 
-// 14. personagem recebendo dano e sendo curado
-console.log("\nDANO E CURA");
-console.log("Aragorn recebe 40 de dano");
-aragorn.receberDano(40);
-console.log("Aragorn recebe 25 de cura");
-aragorn.curar(25);
+// // 14. personagem recebendo dano e sendo curado
+// console.log("\nDANO E CURA");
+// console.log("Aragorn recebe 40 de dano");
+// aragorn.receberDano(40);
+// console.log("Aragorn recebe 25 de cura");
+// aragorn.curar(25);
 
-// 15. ganho de experiência e subida de nível 
-console.log("\nEXPERIÊNCIA E NÍVEL");
-console.log("Aragorn ganha 50 XP");
-aragorn.ganharXP(50);
-console.log("Aragorn ganha mais 60 XP");
-aragorn.ganharXP(60);
+// // 15. ganho de experiência e subida de nível 
+// console.log("\nEXPERIÊNCIA E NÍVEL");
+// console.log("Aragorn ganha 50 XP");
+// aragorn.ganharXP(50);
+// console.log("Aragorn ganha mais 60 XP");
+// aragorn.ganharXP(60);
 
-// 16. habilidades especiais 
-console.log("\n=== HABILIDADES ESPECIAIS ===");
+// // 16. habilidades especiais 
+// console.log("\n=== HABILIDADES ESPECIAIS ===");
 
-const bolaDeFogo = new BolaDeFogo();
-const habilidadeCura = new Cura();
-const golpePoderoso = new GolpePoderoso();
-const explosao = new Explosao();
-const drenagemVida = new DrenagemDeVida();
+// const bolaDeFogo = new BolaDeFogo();
+// const habilidadeCura = new Cura();
+// const golpePoderoso = new GolpePoderoso();
+// const explosao = new Explosao();
+// const drenagemVida = new DrenagemDeVida();
 
-gandalf.aprenderHabilidade(bolaDeFogo);
-gandalf.aprenderHabilidade(habilidadeCura);
-gandalf.aprenderHabilidade(explosao);
+// gandalf.aprenderHabilidade(bolaDeFogo);
+// gandalf.aprenderHabilidade(habilidadeCura);
+// gandalf.aprenderHabilidade(explosao);
 
-aragorn.aprenderHabilidade(golpePoderoso);
-saruman.aprenderHabilidade(drenagemVida);
+// aragorn.aprenderHabilidade(golpePoderoso);
+// saruman.aprenderHabilidade(drenagemVida);
 
-console.log("\nGandalf usa Bola de Fogo em Saruman ");
-gandalf.usarHabilidade(bolaDeFogo, [saruman]);
-console.log("\nGandalf tenta usar Bola de Fogo novamente ");
-gandalf.usarHabilidade(bolaDeFogo, [saruman]);
-console.log("\nAragorn usa Golpe Poderoso em Saruman (sem mana)");
-aragorn.usarHabilidade(golpePoderoso, [saruman]);
-console.log("\nGandalf usa Cura em Aragorn");
-gandalf.usarHabilidade(habilidadeCura, [aragorn]);
-console.log("\nGandalf usa Explosão em Área atingindo Aragorn e Saruman");
-gandalf.usarHabilidade(explosao, [aragorn, saruman]);
-console.log("\nSaruman usa Drenagem de Vida em Gandalf");
-saruman.usarHabilidade(drenagemVida, [gandalf]);
-console.log("\nPassando 3 turnos para resetar os cooldowns");
-jogo.passarTurno();
-jogo.passarTurno();
-jogo.passarTurno();
-console.log("\nGandalf usa Bola de Fogo novamente após o cooldown recarregar");
-gandalf.usarHabilidade(bolaDeFogo, [saruman]);
+// console.log("\nGandalf usa Bola de Fogo em Saruman ");
+// gandalf.usarHabilidade(bolaDeFogo, [saruman]);
+// console.log("\nGandalf tenta usar Bola de Fogo novamente ");
+// gandalf.usarHabilidade(bolaDeFogo, [saruman]);
+// console.log("\nAragorn usa Golpe Poderoso em Saruman (sem mana)");
+// aragorn.usarHabilidade(golpePoderoso, [saruman]);
+// console.log("\nGandalf usa Cura em Aragorn");
+// gandalf.usarHabilidade(habilidadeCura, [aragorn]);
+// console.log("\nGandalf usa Explosão em Área atingindo Aragorn e Saruman");
+// gandalf.usarHabilidade(explosao, [aragorn, saruman]);
+// console.log("\nSaruman usa Drenagem de Vida em Gandalf");
+// saruman.usarHabilidade(drenagemVida, [gandalf]);
+// console.log("\nPassando 3 turnos para resetar os cooldowns");
+// jogo.passarTurno();
+// jogo.passarTurno();
+// jogo.passarTurno();
+// console.log("\nGandalf usa Bola de Fogo novamente após o cooldown recarregar");
+// gandalf.usarHabilidade(bolaDeFogo, [saruman]);
 
 // 17. teste de salvamento 
 const repository = new JsonJogoReposiory("jogo.json")
